@@ -27,7 +27,7 @@ namespace WebAPI.Controllers
         [ResponseType(typeof(User))]
         public async Task<IHttpActionResult> GetUser(int id)
         {
-            User user = await db.Users.FindAsync(id);
+            User user = await db.Users.Include(r => r.Roles).SingleOrDefaultAsync(i => i.UserID == id); 
             if (user == null)
             {
                 return NotFound();

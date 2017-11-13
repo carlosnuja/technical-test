@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="UsersModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="UsersModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Role">
           <Key>
             <PropertyRef Name="RoleID" />
@@ -17,11 +17,9 @@
             <PropertyRef Name="UserID" />
           </Key>
           <Property Name="UserID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserName" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Password" Type="nvarchar" MaxLength="32" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nchar" MaxLength="32" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'C:\USERS\CARLOS\SOURCE\REPOS\TECHNICALTEST\RESTAPI\WEBAPI\APP_DATA\USERS.MDF.dbo.UserRole' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="UserRole">
           <Key>
             <PropertyRef Name="UserID" />
@@ -30,124 +28,108 @@ warning 6002: The table/view 'C:\USERS\CARLOS\SOURCE\REPOS\TECHNICALTEST\RESTAPI
           <Property Name="UserID" Type="int" Nullable="false" />
           <Property Name="RoleID" Type="int" Nullable="false" />
         </EntityType>
-        <Function Name="AddNewRole" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="roleNAme" Type="nchar" Mode="In" />
-        </Function>
-        <Function Name="CreateNewUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="userName" Type="varchar" Mode="In" />
-          <Parameter Name="password" Type="varchar" Mode="In" />
-          <Parameter Name="roleId" Type="int" Mode="In" />
-          <Parameter Name="error" Type="varchar(max)" Mode="InOut" />
-        </Function>
-        <Function Name="GetUserById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="UserId" Type="int" Mode="In" />
-        </Function>
-        <Function Name="GetUserRolesById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="UserId" Type="int" Mode="In" />
-        </Function>
+        <Association Name="FK_UserRole_Role">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="UserRole" Type="Self.UserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleID" />
+            </Principal>
+            <Dependent Role="UserRole">
+              <PropertyRef Name="RoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserRole_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserRole" Type="Self.UserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="UserRole">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="UsersModelStoreContainer">
           <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="UserRole" EntityType="Self.UserRole" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [UserRole].[UserID] AS [UserID], 
-    [UserRole].[RoleID] AS [RoleID]
-    FROM [dbo].[UserRole] AS [UserRole]</DefiningQuery>
-          </EntitySet>
+          <EntitySet Name="UserRole" EntityType="Self.UserRole" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_UserRole_Role" Association="Self.FK_UserRole_Role">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="UserRole" EntitySet="UserRole" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserRole_User" Association="Self.FK_UserRole_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserRole" EntitySet="UserRole" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="UsersModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityContainer Name="UsersEntities" annotation:LazyLoadingEnabled="true" >
-          <FunctionImport Name="AddNewRole">
-          <Parameter Name="roleNAme" Mode="In" Type="String" />
-          </FunctionImport>
-          <FunctionImport Name="CreateNewUser">
-            <Parameter Name="userName" Mode="In" Type="String" />
-            <Parameter Name="password" Mode="In" Type="String" />
-            <Parameter Name="roleId" Mode="In" Type="Int32" />
-            <Parameter Name="error" Mode="InOut" Type="String" />
-          </FunctionImport>
-          <FunctionImport Name="GetUserById" ReturnType="Collection(String)">
-          <Parameter Name="UserId" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="GetUserRolesById" ReturnType="Collection(UsersModel.GetUserRolesById_Result)">
-          <Parameter Name="UserId" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <EntitySet Name="Role" EntityType="UsersModel.Role" />
-          <EntitySet Name="User" EntityType="UsersModel.User" />
-          <EntitySet Name="UserRole" EntityType="UsersModel.UserRole" />
-        </EntityContainer>
-        <ComplexType Name="GetUserRolesById_Result">
-          <Property Type="Int32" Name="RoleID" Nullable="false" />
-          <Property Type="String" Name="RoleName" Nullable="false" MaxLength="15" />
-        </ComplexType>
         <EntityType Name="Role">
           <Key>
             <PropertyRef Name="RoleID" />
           </Key>
           <Property Name="RoleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="RoleName" Type="String" Nullable="false" MaxLength="15" FixedLength="true" Unicode="true" />
+          <Property Name="RoleName" Type="String" MaxLength="15" FixedLength="true" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Users" Relationship="Self.UserRole" FromRole="Role" ToRole="User" />
         </EntityType>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="UserID" />
           </Key>
           <Property Name="UserID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Password" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="32" FixedLength="true" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Roles" Relationship="Self.UserRole" FromRole="User" ToRole="Role" />
         </EntityType>
-        <EntityType Name="UserRole">
-          <Key>
-            <PropertyRef Name="UserID" />
-            <PropertyRef Name="RoleID" />
-          </Key>
-          <Property Name="UserID" Type="Int32" Nullable="false" />
-          <Property Name="RoleID" Type="Int32" Nullable="false" />
-        </EntityType>
+        <Association Name="UserRole">
+          <End Role="Role" Type="Self.Role" Multiplicity="*" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="UsersEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Roles" EntityType="Self.Role" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="UserRole" Association="Self.UserRole">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+        </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="UsersModelStoreContainer" CdmEntityContainer="UsersEntities" >
-          <FunctionImportMapping FunctionImportName="AddNewRole" FunctionName="UsersModel.Store.AddNewRole" />
-          <FunctionImportMapping FunctionImportName="CreateNewUser" FunctionName="UsersModel.Store.CreateNewUser" />
-          <FunctionImportMapping FunctionImportName="GetUserById" FunctionName="UsersModel.Store.GetUserById" />
-          <FunctionImportMapping FunctionImportName="GetUserRolesById" FunctionName="UsersModel.Store.GetUserRolesById">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="UsersModel.GetUserRolesById_Result">
-                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
-                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <EntitySetMapping Name="Role">
+        <EntityContainerMapping StorageEntityContainer="UsersModelStoreContainer" CdmEntityContainer="UsersEntities">
+          <EntitySetMapping Name="Roles">
             <EntityTypeMapping TypeName="UsersModel.Role">
               <MappingFragment StoreEntitySet="Role">
-                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
                 <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="User">
+          <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="UsersModel.User">
               <MappingFragment StoreEntitySet="User">
-                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="UserRole">
-            <EntityTypeMapping TypeName="UsersModel.UserRole">
-              <MappingFragment StoreEntitySet="UserRole">
-                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
+          <AssociationSetMapping Name="UserRole" TypeName="UsersModel.UserRole" StoreEntitySet="UserRole">
+            <EndProperty Name="Role">
+              <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+            </EndProperty>
+            <EndProperty Name="User">
+              <ScalarProperty Name="UserID" ColumnName="UserID" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -162,7 +144,7 @@ warning 6002: The table/view 'C:\USERS\CARLOS\SOURCE\REPOS\TECHNICALTEST\RESTAPI
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />

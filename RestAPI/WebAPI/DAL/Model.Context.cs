@@ -12,8 +12,6 @@ namespace WebAPI.DAL
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Core.Objects;
-    using System.Linq;
     
     public partial class UsersEntities : DbContext
     {
@@ -27,52 +25,7 @@ namespace WebAPI.DAL
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Role> Role { get; set; }
-        public virtual DbSet<User> User { get; set; }
-        public virtual DbSet<UserRole> UserRole { get; set; }
-    
-        public virtual int AddNewRole(string roleNAme)
-        {
-            var roleNAmeParameter = roleNAme != null ?
-                new ObjectParameter("roleNAme", roleNAme) :
-                new ObjectParameter("roleNAme", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("AddNewRole", roleNAmeParameter);
-        }
-    
-        public virtual int CreateNewUser(string userName, string password, Nullable<int> roleId, ObjectParameter error)
-        {
-            var userNameParameter = userName != null ?
-                new ObjectParameter("userName", userName) :
-                new ObjectParameter("userName", typeof(string));
-    
-            var passwordParameter = password != null ?
-                new ObjectParameter("password", password) :
-                new ObjectParameter("password", typeof(string));
-    
-            var roleIdParameter = roleId.HasValue ?
-                new ObjectParameter("roleId", roleId) :
-                new ObjectParameter("roleId", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CreateNewUser", userNameParameter, passwordParameter, roleIdParameter, error);
-        }
-    
-        public virtual ObjectResult<string> GetUserById(Nullable<int> userId)
-        {
-            var userIdParameter = userId.HasValue ?
-                new ObjectParameter("UserId", userId) :
-                new ObjectParameter("UserId", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("GetUserById", userIdParameter);
-        }
-    
-        public virtual ObjectResult<GetUserRolesById_Result> GetUserRolesById(Nullable<int> userId)
-        {
-            var userIdParameter = userId.HasValue ?
-                new ObjectParameter("UserId", userId) :
-                new ObjectParameter("UserId", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetUserRolesById_Result>("GetUserRolesById", userIdParameter);
-        }
+        public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<User> Users { get; set; }
     }
 }

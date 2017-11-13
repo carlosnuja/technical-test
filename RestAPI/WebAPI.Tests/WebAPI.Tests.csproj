@@ -1,16 +1,17 @@
-﻿<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{CB45A20A-EE93-49A0-B11F-D6452349BE81}</ProjectGuid>
+    <ProjectGuid>{2AA01496-A714-4FAE-930D-E017A19EC882}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WebAPI.Tests</RootNamespace>
     <AssemblyName>WebAPI.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
@@ -102,7 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WebAPI\WebAPI.csproj">
-      <Project>{ea10fea3-d06c-4acf-9900-3d2b7e31a7ee}</Project>
+      <Project>{9AA4A288-48B6-4EE8-B6D1-077E6A6F6B2B}</Project>
       <Name>WebAPI</Name>
     </ProjectReference>
   </ItemGroup>

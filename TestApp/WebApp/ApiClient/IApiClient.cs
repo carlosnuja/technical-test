@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace WebApp.Clients
+namespace WebApp.ApiClient
 {
     public interface IApiClient
     {        

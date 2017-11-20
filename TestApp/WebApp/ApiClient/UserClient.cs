@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
 using WebApp.Models;
 
 namespace WebApp.ApiClient
 {
     public class UserClient : BaseClient
     {
-        public UserClient(string baseUrl) : base(baseUrl)
+        public UserClient() : base()
         {            
         }
 
-        public async Task<User> GetUserInfoAsync(int userId)
+        public async Task<User> GetUserInfoAsync()
         {
             User user = null;
-            string path = $"{userId}/user/info";
+            string path = $"/user/info";
             HttpResponseMessage response = await Client.GetAsync(path);
             if (response.IsSuccessStatusCode)
             {
@@ -25,7 +21,6 @@ namespace WebApp.ApiClient
             }
             return user;
         }
-
 
     }
 }

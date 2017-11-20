@@ -17,7 +17,7 @@ namespace WebAPI.DAL
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public User()
         {
-            this.Roles = new HashSet<Role>();
+            this.Role = new HashSet<Role>();
         }
     
         public int UserID { get; set; }
@@ -25,6 +25,6 @@ namespace WebAPI.DAL
         public string Password { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Role> Roles { get; set; }
+        public virtual ICollection<Role> Role { get; set; }
     }
 }

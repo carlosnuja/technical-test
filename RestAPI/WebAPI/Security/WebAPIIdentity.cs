@@ -24,7 +24,7 @@ namespace WebAPI.Security
 
 		public bool IsInRole(string role)
 		{
-			return this.User.Roles.Count(r => r.RoleName.Equals(role)) > 0;
+			return this.User.Role.Count(r => r.RoleName.Equals(role)) > 0;
 		}
 	}
 }

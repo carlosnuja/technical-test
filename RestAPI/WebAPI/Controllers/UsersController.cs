@@ -5,7 +5,6 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -15,19 +14,19 @@ namespace WebAPI.Controllers
 {
     public class UsersController : ApiController
     {
-        private UsersEntities db = new UsersEntities();
+        private TestEntities db = new TestEntities();
 
         // GET: api/Users
         public IQueryable<User> GetUsers()
         {
-            return db.Users;
+            return db.User;
         }
 
         // GET: api/Users/5
         [ResponseType(typeof(User))]
         public async Task<IHttpActionResult> GetUser(int id)
         {
-            User user = await db.Users.Include(r => r.Roles).SingleOrDefaultAsync(i => i.UserID == id); 
+            User user = await db.User.Include(r => r.Role).SingleOrDefaultAsync(i => i.UserID == id); 
             if (user == null)
             {
                 return NotFound();
@@ -50,7 +49,7 @@ namespace WebAPI.Controllers
                 return BadRequest();
             }
 
-            db.Entry(user).State = EntityState.Modified;
+            db.Entry(user).State = System.Data.Entity.EntityState.Modified;
 
             try
             {
@@ -80,7 +79,7 @@ namespace WebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            db.Users.Add(user);
+            db.User.Add(user);
             await db.SaveChangesAsync();
 
             return CreatedAtRoute("DefaultApi", new { id = user.UserID }, user);
@@ -90,13 +89,13 @@ namespace WebAPI.Controllers
         [ResponseType(typeof(User))]
         public async Task<IHttpActionResult> DeleteUser(int id)
         {
-            User user = await db.Users.FindAsync(id);
+            User user = await db.User.FindAsync(id);
             if (user == null)
             {
                 return NotFound();
             }
 
-            db.Users.Remove(user);
+            db.User.Remove(user);
             await db.SaveChangesAsync();
 
             return Ok(user);
@@ -113,7 +112,7 @@ namespace WebAPI.Controllers
 
         private bool UserExists(int id)
         {
-            return db.Users.Count(e => e.UserID == id) > 0;
+            return db.User.Count(e => e.UserID == id) > 0;
         }
     }
 }

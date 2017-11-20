@@ -1,20 +1,23 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http.Headers;
 using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Web;
+using WebAPI.DAL;
 
 namespace WebAPI.Modules
 {
 	public class BasicAuthHttpModule : IHttpModule
 	{
 		private const string Realm = "My Realm";
+        
 
-		public void Init(HttpApplication context)
+        public void Init(HttpApplication context)
 		{
-			// Register event handlers
-			context.AuthenticateRequest += OnApplicationAuthenticateRequest;
+            // Register event handlers            
+            context.AuthenticateRequest += OnApplicationAuthenticateRequest;
 			context.EndRequest += OnApplicationEndRequest;
 		}
 
@@ -30,7 +33,8 @@ namespace WebAPI.Modules
 		// TODO: Here is where you would validate the username and password.
 		private static bool CheckPassword(string username, string password)
 		{
-			return username == "user" && password == "password";
+            TestEntities db = new TestEntities();
+            return db.CheckUserAndPassword(username, password).FirstOrDefault() ?? false;
 		}
 
 		private static void AuthenticateUser(string credentials)

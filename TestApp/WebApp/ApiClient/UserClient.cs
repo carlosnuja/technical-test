@@ -13,7 +13,7 @@ namespace WebApp.ApiClient
         public async Task<User> GetUserInfoAsync()
         {
             User user = null;
-            string path = $"/user/info";
+            string path = $"/api/users";
             HttpResponseMessage response = await Client.GetAsync(path);
             if (response.IsSuccessStatusCode)
             {

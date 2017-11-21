@@ -6,28 +6,24 @@ using System.Web;
 
 namespace WebApp.Models
 {
-	public class CustomPrincipal : IPrincipal
-	{
-		public IIdentity Identity { get; private set; }
-		public bool IsInRole(string role)
-		{
-			if (roles.Any(r => role.Contains(r)))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
+    public class CustomPrincipal : IPrincipal
+    {
+        public User User { get; }
 
-		public CustomPrincipal(string Username)
-		{
-			this.Identity = new GenericIdentity(Username);
-		}
+        public IIdentity Identity { get; private set; }
 
-		public int UserId { get; set; }
-		public string UserName { get; set; }
-		public string[] roles { get; set; }
-	}
+        public CustomPrincipal(User user)
+        {
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+            this.User = user;
+            this.Identity = new GenericIdentity(user.UserName);
+        }
+
+
+        public bool IsInRole(string role)
+        {
+            return this.User.Roles.Count(r => r.RoleName.Equals(role)) > 0;
+        }
+    }
 }

@@ -7,22 +7,22 @@ using WebAPI.DAL;
 
 namespace WebAPI.Security
 {
-	public class WebApiIdentity : IIdentity
+	public class WebApiPrincipal : IPrincipal
 	{
 		public User User { get; }
 
-		public WebApiIdentity(User user)
+        public IIdentity Identity { get; private set; }
+
+        public WebApiPrincipal(User user)
 		{
 			if (user == null)
 				throw new ArgumentNullException(nameof(user));
 			this.User = user;
-		}
+            this.Identity = new GenericIdentity(user.UserName);
+        }
+       
 
-		public string Name => this.User.UserName;
-		public string AuthenticationType => "Basic";
-		public bool IsAuthenticated => true;
-
-		public bool IsInRole(string role)
+        public bool IsInRole(string role)
 		{
 			return this.User.Role.Count(r => r.RoleName.Equals(role)) > 0;
 		}

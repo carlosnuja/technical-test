@@ -15,15 +15,15 @@ namespace WebApp.Controllers
     public class AccountController : Controller
     {
         // GET: Account
-        public ActionResult Index()
+        public ActionResult Login()
         {
-            return View();
+            return View(new LoginViewModel());
         }
 
 		[HttpPost]
 	    public ActionResult Login(LoginViewModel model, string returnUrl = "")
 	    {
-		    if (!ModelState.IsValid)
+		    if (ModelState.IsValid)
 		    {
 				UserClient client = new UserClient();
 			    string authInfo = model.Username + ":" + model.Password;

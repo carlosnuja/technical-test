@@ -42,12 +42,7 @@ namespace WebApp
 				FormsAuthenticationTicket authTicket = FormsAuthentication.Decrypt(authCookie.Value);
 
 				User model = JsonConvert.DeserializeObject<User>(authTicket.UserData);
-				CustomPrincipal newUser = new CustomPrincipal(authTicket.Name);
-				newUser.UserId = serializeModel.UserId;
-				newUser.FirstName = serializeModel.FirstName;
-				newUser.LastName = serializeModel.LastName;
-				newUser.roles = serializeModel.roles;
-
+				CustomPrincipal newUser = new CustomPrincipal(model);
 				HttpContext.Current.User = newUser;
 			}
 

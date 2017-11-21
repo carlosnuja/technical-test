@@ -6,32 +6,50 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
-using System.Web.Http.Description;
+using System.Net.Http.Headers;
 using WebAPI.DAL;
+using System.Web.Http.Description;
+using System.Text;
+using WebAPI.Attributes;
 
 namespace WebAPI.Controllers
 {
+    [BasicAuthentication]
     public class UsersController : ApiController
     {
         private TestEntities db = new TestEntities();
 
-        // GET: api/Users
-        public IQueryable<User> GetUsers()
-        {
-            return db.User;
-        }
-
-        // GET: api/Users/5
+        // GET: api/Users/5        
         [ResponseType(typeof(User))]
-        public async Task<IHttpActionResult> GetUser(int id)
+        public async Task<IHttpActionResult> GetUser()
         {
-            User user = await db.User.Include(r => r.Role).SingleOrDefaultAsync(i => i.UserID == id); 
-            if (user == null)
+            User user = null;
+            HttpRequest request = HttpContext.Current.Request;
+            var authHeader = request.Headers["Authorization"];
+            if (authHeader != null)
             {
-                return NotFound();
-            }
+                var authHeaderVal = AuthenticationHeaderValue.Parse(authHeader);
 
+                // RFC 2617 sec 1.2, "scheme" name is case-insensitive
+                if (authHeaderVal.Scheme.Equals("basic",
+                        StringComparison.OrdinalIgnoreCase) &&
+                    authHeaderVal.Parameter != null)
+                {
+                    var encoding = Encoding.GetEncoding("iso-8859-1");
+                    string credentials = encoding.GetString(Convert.FromBase64String(authHeaderVal.Parameter));
+
+                    int separator = credentials.IndexOf(':');
+                    string name = credentials.Substring(0, separator);
+                    string password = credentials.Substring(separator + 1);
+                    user = await db.User.Include(r => r.Role).SingleOrDefaultAsync(i => i.UserName == name);
+                    if (user == null)
+                    {
+                        return NotFound();
+                    }
+                }
+            }
             return Ok(user);
         }
 

@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace WebApp.Models.ViewModels
 {
 	public class LoginViewModel
 	{
         [Required(ErrorMessage = "Please provide an username", AllowEmptyStrings = false)]
+        [Display(Name = "Username")]
         public string Username { get; set;}
         [Required(ErrorMessage = "Please provide a password", AllowEmptyStrings = false)]
-        [DataType(System.ComponentModel.DataAnnotations.DataType.Password)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
         public string Password { get; set; }
+        [Display(Name = "Remember me?")]
+        public bool RememberMe { get; set; }
     }
 }

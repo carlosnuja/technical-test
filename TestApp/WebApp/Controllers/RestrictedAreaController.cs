@@ -7,24 +7,24 @@ using WepApp.Models.ViewModels;
 
 namespace WebApp.Controllers
 {
-	[Authorize]
+	[Attributes.Authorize]
 	public class RestrictedAreaController : Controller
 	{
-		[Authorize(Roles = "Page1")]
+		[Attributes.Authorize(Roles = "Page1")]
 		// GET: RestrictedArea/Page_1
 		public ActionResult Page1()
 		{
 			return View();
 		}
 
-		[Authorize(Roles = "Page2")]
+		[Attributes.Authorize(Roles = "Page2")]
 		// GET: RestrictedArea/Page_2
 		public ActionResult Page2()
 		{
 			return View();
 		}
 
-		[Authorize(Roles = "Page3")]
+		[Attributes.Authorize(Roles = "Page3")]
 		// GET: RestrictedArea/Page_3
 		public ActionResult Page3()
 		{

@@ -7,8 +7,8 @@ namespace WepApp.Models.ViewModels
 {
     public class UserViewModel
     {
-        protected int Id { get; }
-        protected String Username { get; }
+        public int Id { get; set; }
+	    public String Username { get; set; }
 
     }
 }

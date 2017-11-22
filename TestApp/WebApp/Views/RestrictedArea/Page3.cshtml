@@ -1,0 +1,9 @@
+﻿@model WepApp.Models.ViewModels.UserViewModel
+@{
+    ViewBag.Title = "Page 3";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Page 3</h2>
+<p>Hello @this.User.Identity.Name</p>
+<p><a href="@Url.Action("Logout", "Account")" class="btn btn-primary btn-lg">Log out &raquo;</a></p>

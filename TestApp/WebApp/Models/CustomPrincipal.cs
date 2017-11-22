@@ -23,7 +23,8 @@ namespace WebApp.Models
 
         public bool IsInRole(string role)
         {
-            return this.User.Roles.Count(r => r.RoleName.Equals(role)) > 0;
-        }
+			bool b = this.User.Roles.Count(r => role.Contains(r.RoleName.Trim(' '))) > 0;
+	        return b;
+		}
     }
 }

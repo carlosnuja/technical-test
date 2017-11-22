@@ -5,6 +5,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using System.Web.WebPages;
 using Newtonsoft.Json;
 using WebApp.ApiClient;
 using WebApp.Models;
@@ -12,7 +13,8 @@ using WebApp.Models.ViewModels;
 
 namespace WebApp.Controllers
 {
-    public class AccountController : Controller
+	[AllowAnonymous]
+	public class AccountController : Controller
     {
         // GET: Account
         public ActionResult Login()
@@ -42,9 +44,18 @@ namespace WebApp.Controllers
 				    string encTicket = FormsAuthentication.Encrypt(authTicket);
 				    HttpCookie faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);
 				    Response.Cookies.Add(faCookie);
-				}
+				    if (!returnUrl.IsEmpty() && this.Url.IsLocalUrl(returnUrl))
+					    return Redirect(returnUrl);
+					return RedirectToAction("Index", "Home");
+			    }
 		    }
 		    return View(model);
 		}
-    }
+
+	    public ActionResult Logout()
+	    {
+		    FormsAuthentication.SignOut();
+		    return RedirectToAction("Index", "Home");
+	    }
+	}
 }

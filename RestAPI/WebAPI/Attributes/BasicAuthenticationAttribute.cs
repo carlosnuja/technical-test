@@ -17,10 +17,9 @@ namespace WebAPI.Attributes
     {
         private const string BasicAuthResponseHeader = "WWW-Authenticate";
         private const string BasicAuthResponseHeaderValue = "Basic";
+        private const string UsersConfigKey = "UsersAllowed";
+        private const string RolesConfigKey = "RolesAllowed";
         readonly TestEntities dbContext = new TestEntities();
-
-        public string UsersConfigKey { get; set; }
-        public string RolesConfigKey { get; set; }
 
         protected WebApiPrincipal CurrentUser
         {

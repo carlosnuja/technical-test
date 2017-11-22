@@ -13,19 +13,21 @@ using WebAPI.DAL;
 using System.Web.Http.Description;
 using System.Text;
 using WebAPI.Attributes;
+using System.Net.Http;
+using WebAPI.Models;
 
 namespace WebAPI.Controllers
 {
-    [BasicAuthentication]
+   
     public class UsersController : ApiController
     {
         private TestEntities db = new TestEntities();
 
-        // GET: api/Users/5        
+        // GET: api/Users/        
         [ResponseType(typeof(User))]
         public async Task<IHttpActionResult> GetUser()
         {
-            User user = null;
+            UserResponse user = null;
             HttpRequest request = HttpContext.Current.Request;
             var authHeader = request.Headers["Authorization"];
             if (authHeader != null)
@@ -43,14 +45,28 @@ namespace WebAPI.Controllers
                     int separator = credentials.IndexOf(':');
                     string name = credentials.Substring(0, separator);
                     string password = credentials.Substring(separator + 1);
-                    user = await db.User.Include(r => r.Role).SingleOrDefaultAsync(i => i.UserName == name);
+                    user = db.User
+                        .Include(u => u.Role)
+                        .Where(u => u.UserName == name)                        
+                        .Select(u => new UserResponse {
+                            UserId = u.UserID,
+                            UserName = u.UserName,
+                            Roles = u.Role
+                                     .Select(r => new RoleResponse {
+                                         RoleId = r.RoleID,
+                                         RoleName = r.RoleName
+                                     }).ToList()
+                        }).SingleOrDefault();
+
                     if (user == null)
                     {
                         return NotFound();
                     }
-                }
+                    return Ok(user);
+                }                
             }
-            return Ok(user);
+            return NotFound();
+
         }
 
         // PUT: api/Users/5

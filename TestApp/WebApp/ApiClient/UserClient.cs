@@ -10,11 +10,13 @@ namespace WebApp.ApiClient
         {            
         }
 
+        public object ResponseHeadersRead { get; private set; }
+
         public async Task<User> GetUserInfoAsync()
         {
             User user = null;
             string path = $"/api/users";
-            HttpResponseMessage response = await Client.GetAsync(path);
+            HttpResponseMessage response = await Client.GetAsync(path, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
             if (response.IsSuccessStatusCode)
             {
                 user = await response.Content.ReadAsAsync<User>();

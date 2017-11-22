@@ -9,7 +9,7 @@ namespace WebApp
     {
         private HttpClient _client;
 
-        protected HttpClient Client { get; }
+        protected HttpClient Client { get { return _client; } }
 
         public BaseClient()
         {
